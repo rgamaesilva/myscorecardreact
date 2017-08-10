@@ -3,7 +3,7 @@ import React from 'react';
 const SelectHoles = function(props) {
   return(
     <select className="selectHoles" onChange={(event) => (props.addHoles(event.target.value))}>
-      <option>0</option>
+      <option>Number of Holes</option>
       <option>1</option>
       <option>2</option>
       <option>3</option>

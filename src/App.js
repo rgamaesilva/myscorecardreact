@@ -10,7 +10,12 @@ class App extends Component {
     arrayOfHoles: [],
     arrayOfPlayers: [],
     input: "",
-    scoresTotal: {}
+    scoresTotal: {},
+    selectedCourse: "",
+    arrayOfHcp: [
+      {name: "sfgc", hcp: [4, 4, 4, 4, 4, 3, 5, 3, 4, 4, 4, 3, 5, 4, 4, 3, 5, 4]},
+      {name: "bv", hcp: [4, 3, 5, 4, 3, 4, 4, 4, 4, 4, 5, 3, 4, 4, 3, 4, 4, 4]}
+    ]
   }
 
   addHoles = (newValue) => {
@@ -23,7 +28,9 @@ class App extends Component {
 
   addPlayer = () => {
     const scoresArray = this.state.arrayOfHoles.map(() => 0);
-    const newPlayer = {name: this.state.input, scores: scoresArray}
+    let newPlayer = {name: this.state.input, scores: scoresArray};
+    const handicap = parseInt(prompt(`Please enter ${newPlayer.name} handicap`), 10)
+    newPlayer = {name: this.state.input, scores: scoresArray, handicap: handicap};
     const newArrayOfPlayers = this.state.arrayOfPlayers.concat(newPlayer);
     this.setState({arrayOfPlayers: newArrayOfPlayers, input: ""});
   }
@@ -53,9 +60,9 @@ class App extends Component {
     const newScore = this.state.arrayOfPlayers[index].scores[hole - 1] + 1;
     let newArrayOfPlayers = this.state.arrayOfPlayers;
     newArrayOfPlayers[index].scores[hole - 1] = newScore;
-
     this.setState({arrayOfPlayers: newArrayOfPlayers})
-    const totalScores = this.state.arrayOfPlayers.reduce((accumulator, value) => {
+
+    let totalScores = this.state.arrayOfPlayers.reduce((accumulator, value) => {
       for (const score of value.scores) {
          accumulator[value.name] = (accumulator[value.name] || 0) + score;
       }
@@ -64,11 +71,19 @@ class App extends Component {
     this.setState({scoresTotal: totalScores});
   }
 
+  changeCourse = (course) => {
+    for (let i = 0 ; i < this.state.arrayOfHcp.length ; i++) {
+      if (this.state.arrayOfHcp[i].name === course) {
+        this.setState({selectedCourse: i})
+      }
+    }
+  }
+
   render() {
     return (
       <div className="scoreboard">
-        <Header addHoles={this.addHoles} scoresTotal={this.state.scoresTotal} arrayOfPlayers={this.state.arrayOfPlayers}/>
-        <Holes arrayOfPlayers={this.state.arrayOfPlayers} arrayOfHoles={this.state.arrayOfHoles} incrementScore={this.incrementScore} decrementScore={this.decrementScore}/>
+        <Header addHoles={this.addHoles} scoresTotal={this.state.scoresTotal} arrayOfPlayers={this.state.arrayOfPlayers} selectCourse={this.state.arrayOfHcp} selectedCourse={this.state.selectedCourse} changeCourse={this.changeCourse}/>
+        <Holes arrayOfPlayers={this.state.arrayOfPlayers} arrayOfHoles={this.state.arrayOfHoles} incrementScore={this.incrementScore} decrementScore={this.decrementScore} arrayOfHcp={this.state.arrayOfHcp} selectedCourse={this.state.selectedCourse}/>
         <AddPlayer addPlayer={this.addPlayer} updateInput={this.updateInput} inputValue={this.state.input}/>
       </div>
 

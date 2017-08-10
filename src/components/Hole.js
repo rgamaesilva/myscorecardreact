@@ -9,7 +9,8 @@ const Hole = (props) => (
         </div>
         <div className="holes">
           <div className="player-holes">
-            {props.hole}
+            {"HOLE: "}{props.hole}
+            {"-hcp- "}{props.arrayOfHcp[props.selectedCourse].hcp[props.hole -1]}
           </div>
         </div>
         <div className="player-score">
